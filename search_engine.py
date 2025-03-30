@@ -33,13 +33,17 @@ from typing import Dict, Any, List
 
 # In[4]:
 
+OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
+PINECONE_API_KEY = st.secrets["PINECONE_API_KEY"]
+PINECONE_ENV = st.secrets["PINECONE_ENV"]
+PINECONE_INDEX_NAME = st.secrets["PINECONE_INDEX_NAME"]
+COHERE_API_KEY = st.secrets[COHERE_API_KEY]
 
-COHERE_API_KEY = 'm4d0XNZxaXRdeAou4DyH1QtrwFvIqbNRoXyJrQln'
 co = cohere.Client(COHERE_API_KEY)
 
 pinecone.init(
-    api_key="3043c8a5-bd9e-4e4c-897b-82bfb2f3e5bd",
-    environment="gcp-starter"
+    api_key=PINECONE_API_KEY,
+    environment=PINECONE_ENV
 )
 idx=pinecone.Index('relacaocoimbra')
 
@@ -132,8 +136,8 @@ def hybrid_scale(dense, sparse, alpha: float):
 
 def hybrid_query(question, top_k, alpha, filter=None):
     def connect_to_pinecone():
-        pinecone.init(api_key="3043c8a5-bd9e-4e4c-897b-82bfb2f3e5bd", environment="gcp-starter")
-        return pinecone.Index('relacaocoimbra')
+        pinecone.init(api_key=PINECONE_API_KEY, environment=PINECONE_ENV)
+        return pinecone.Index(PINECONE_INDEX_NAME)
     idx = connect_to_pinecone()
     # convert the question into a sparse vector
     sparse_vec = sparse_encoder.generate_sparse_vectors([question])[0]
@@ -268,8 +272,8 @@ def remove_initial_characters(text : str) -> str:
 
 @st.cache_resource
 def connect_to_pinecone():
-    pinecone.init(api_key="3043c8a5-bd9e-4e4c-897b-82bfb2f3e5bd", environment="gcp-starter")
-    return pinecone.Index('relacaocoimbra')
+    pinecone.init(api_key=OPENAI_API_KEY, environment=PINECONE_ENV)
+    return pinecone.Index(PINECONE_INDEX_NAME)
 
 
 def run_search_engine_app(hybrid_scale, hybrid_query, rerank):
