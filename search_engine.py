@@ -45,7 +45,7 @@ pinecone.init(
     api_key=PINECONE_API_KEY,
     environment=PINECONE_ENV
 )
-idx=pinecone.Index('relacaocoimbra')
+idx=pinecone.Index(PINECONE_INDEX_NAME)
 
 with open('descritores_all.pkl', 'rb') as f:
     descritores_all = pickle.load(f)
